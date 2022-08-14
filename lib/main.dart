@@ -29,6 +29,13 @@ class password486 extends StatelessWidget {
         title: Text('Password486'),
         centerTitle: true,
       ),
+      body: Center(
+        child: Column(
+          children: [
+            
+          ],
+        )
+      ), 
     );
   }
 }
