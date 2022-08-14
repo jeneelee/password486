@@ -10,17 +10,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'PassWord486',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const password486(),
+      home: const PassWord486(),
     );
   }
 }
 
-class password486 extends StatelessWidget {
-  const password486({Key? key}) : super(key: key);
+class PassWord486 extends StatelessWidget {
+  const PassWord486({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +30,9 @@ class password486 extends StatelessWidget {
         centerTitle: true,
       ),
       body: Center(
-        child: Column(
-          children: [
-            
-          ],
-        )
-      ), 
+          child: Column(
+        children: [],
+      )),
     );
   }
 }
