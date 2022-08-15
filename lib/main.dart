@@ -25,14 +25,16 @@ class PassWord486 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Password486'),
-        centerTitle: true,
-      ),
-      body: Center(
-          child: Column(
-        children: [],
-      )),
-    );
+        appBar: AppBar(
+          title: Text('Password486'),
+          centerTitle: true,
+        ),
+        body: ListView(
+          children: [
+            Text('A'),
+            Text('B'),
+            Text('C'),
+          ],
+        ));
   }
 }
