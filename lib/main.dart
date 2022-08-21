@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:floating_action_bubble/floating_action_bubble.dart';
+import 'Passadd.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,11 +24,11 @@ class MyApp extends StatelessWidget {
 }
 
 /// 버킷 클래스
-class Bucket {
-  String job; // 할 일
-  bool isDone; // 완료 여부
+class Add {
+  String idpassword; // 할 일
+  // bool isDone; // 완료 여부
 
-  Bucket(this.job, this.isDone); // 생성자
+  Add(this.idpassword); // 생성자
 }
 
 class PassWord486 extends StatefulWidget {
@@ -36,10 +38,27 @@ class PassWord486 extends StatefulWidget {
   State<PassWord486> createState() => _PassWord486State();
 }
 
-class _PassWord486State extends State<PassWord486> {
-  List<Bucket> bucketList = []; // 전체 버킷리스트 목록
+class _PassWord486State extends State<PassWord486>
+    with SingleTickerProviderStateMixin {
+  List<Add> password486List = []; // 전체 버킷리스트 목록
 
   final textController = TextEditingController();
+
+  late Animation<double> _animation;
+  late AnimationController _animationController;
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 260),
+    );
+
+    final curvedAnimation =
+        CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
+    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,22 +66,22 @@ class _PassWord486State extends State<PassWord486> {
       appBar: AppBar(
         title: Text("PassWord486"),
       ),
-      body: bucketList.isEmpty
-          ? Center(child: Text("내용을 추가해 주세요."))
+      body: password486List.isEmpty
+          ? Center(child: Text("+ 버튼을 눌러 내용을 추가해 주세요."))
           : ListView.builder(
-              itemCount: bucketList.length, // bucketList 개수 만큼 보여주기
+              itemCount: password486List.length, // bucketList 개수 만큼 보여주기
               itemBuilder: (context, index) {
-                Bucket bucket = bucketList[index]; // index에 해당하는 bucket 가져오기
+                Add idpass = password486List[index]; // index에 해당하는 bucket 가져오기
                 return ListTile(
                   // 버킷 리스트 할 일
                   title: Text(
-                    bucket.job,
+                    idpass.idpassword,
                     style: TextStyle(
-                      fontSize: 24,
-                      color: bucket.isDone ? Colors.grey : Colors.black,
-                      decoration: bucket.isDone
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
+                      fontSize: 20,
+                      //     color: idpass.isDone ? Colors.grey : Colors.black,
+                      //     decoration: idpass.isDone
+                      //         ? TextDecoration.lineThrough
+                      //         : TextDecoration.none,
                     ),
                   ),
                   // 삭제 아이콘 버튼
@@ -73,34 +92,109 @@ class _PassWord486State extends State<PassWord486> {
                       showDeleteDialog(context, index);
                     },
                   ),
-                  onTap: () {
-                    // 아이템 클릭시
-                    setState(() {
-                      bucket.isDone = !bucket.isDone;
-                    });
-                  },
+                  // onTap: () {
+                  //   // 아이템 클릭시
+                  //   setState(() {
+                  //     idpass.isDone = !idpass.isDone;
+                  //   });
+                  // },
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          // + 버튼 클릭시 버킷 생성 페이지로 이동
-          String? job = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => CreatePage()),
-          );
-          if (job != null) {
-            setState(() {
-              Bucket newBucket = Bucket(job, false);
-              bucketList.add(newBucket); // 버킷 리스트에 추가
-            });
-          }
-        },
+      floatingActionButton: FloatingActionBubble(
+        items: <Bubble>[
+          Bubble(
+            icon: Icons.settings,
+            iconColor: Colors.white,
+            title: "비밀번호 추가",
+            titleStyle: TextStyle(fontSize: 16, color: Colors.white),
+            bubbleColor: Colors.blue,
+            onPress: () async {
+              String? idpassword = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => Passadd()),
+              );
+              if (idpassword != null) {
+                setState(() {
+                  Add newAdd = Add(
+                    idpassword,
+                  );
+                  password486List.add(newAdd);
+                });
+              }
+
+              // Navigator.pushReplacement(
+              //     context, MaterialPageRoute(builder: (context) => Passadd()));
+            },
+          ),
+          Bubble(
+            icon: Icons.settings,
+            iconColor: Colors.white,
+            title: "메모 추가",
+            titleStyle: TextStyle(fontSize: 16, color: Colors.white),
+            bubbleColor: Colors.blue,
+            onPress: () {
+              _animationController.reverse();
+            },
+          ),
+          Bubble(
+            icon: Icons.settings,
+            iconColor: Colors.white,
+            title: "사진 추가",
+            titleStyle: TextStyle(fontSize: 16, color: Colors.white),
+            bubbleColor: Colors.blue,
+            onPress: () {
+              _animationController.reverse();
+            },
+          ),
+          Bubble(
+            icon: Icons.settings,
+            iconColor: Colors.white,
+            title: "새폴더 추가",
+            titleStyle: TextStyle(fontSize: 16, color: Colors.white),
+            bubbleColor: Colors.blue,
+            onPress: () {
+              _animationController.reverse();
+            },
+          )
+        ],
+
+        //animation controller
+        animation: _animation,
+
+        onPress: () => _animationController.isCompleted
+            ? _animationController.reverse()
+            : _animationController.forward(),
+
+        iconColor: Colors.red,
+        iconData: Icons.add,
+        backGroundColor: Colors.yellow,
+
+//--------------------------------------------------------------------
+        // child: Icon(Icons.add),
+        //onPressed:
+        //     () async {
+        // + 버튼 클릭시 버킷 생성 페이지로 이동
+
+        //   String? password486List = await Navigator.push(
+        //     context,
+
+        //     MaterialPageRoute(builder: (_) => Passadd()),
+        //   );
+        //   if (idpassword != null) {
+        //     setState(() {
+        //       Add newAdd = Add(idpassword);
+        //       password486List.add(newAdd); // 버킷 리스트에 추가
+        //     });
+        //   }
+        // },
+
+//--------------------------------------------------------------------
       ),
     );
   }
 
+//----------------------------------------------------------------------
   void showDeleteDialog(BuildContext context, int index) {
     showDialog(
       context: context,
@@ -120,7 +214,7 @@ class _PassWord486State extends State<PassWord486> {
               onPressed: () {
                 setState(() {
                   // 삭제
-                  bucketList.removeAt(index);
+                  password486List.removeAt(index);
                 });
                 Navigator.pop(context);
               },
@@ -132,82 +226,6 @@ class _PassWord486State extends State<PassWord486> {
           ],
         );
       },
-    );
-  }
-}
-
-/// 버킷 생성 페이지
-class CreatePage extends StatefulWidget {
-  const CreatePage({Key? key}) : super(key: key);
-
-  @override
-  State<CreatePage> createState() => _CreatePageState();
-}
-
-class _CreatePageState extends State<CreatePage> {
-  // TextField의 값을 가져올 때 사용합니다.
-  TextEditingController textController = TextEditingController();
-
-  // 경고 메세지
-  String? error;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("버킷리스트 작성"),
-        // 뒤로가기 버튼
-        leading: IconButton(
-          icon: Icon(CupertinoIcons.chevron_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // 텍스트 입력창
-            TextField(
-              controller: textController, // 연결해 줍니다.
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: "하고 싶은 일을 입력하세요",
-                errorText: error,
-              ),
-            ),
-            SizedBox(height: 32),
-            // 추가하기 버튼
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                child: Text(
-                  "추가하기",
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                onPressed: () {
-                  // 추가하기 버튼 클릭시
-                  String job = textController.text; // 값 가져오기
-                  if (job.isEmpty) {
-                    setState(() {
-                      error = "내용을 입력해주세요."; // 내용이 없는 경우 에러 메세지
-                    });
-                  } else {
-                    setState(() {
-                      error = null; // 내용이 있는 경우 에러 메세지 숨기기
-                    });
-                    Navigator.pop(context, job); // job 변수를 반환하며 화면을 종료합니다.
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
